@@ -41,6 +41,7 @@
 		destination: destination,
 		time:time,
 		frequency: frequency
+
 	});
 
   alert("Train successfully added!");
@@ -72,22 +73,32 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey){
   console.log(trainTime);
   console.log(trainFrequency);
 
-  /*     Format the military
+ 
+  var trainTime = moment(trainTime, "HH:mm");
+  console.log("first train time:" + trainTime);
 
-  var empDatePretty = moment.unix(empDate).format("MM/DD/YY");
+  var timeNow = moment();
 
-  // Calculate the time using hardconre math
-  // To calculate the train's arrival time 
+  var timeDifference = timeNow.diff(moment(trainTime), "minutes");
 
-  var empMonths = moment().diff(moment.unix(empDate, 'X'), "months");
-  console.log(empMonths);
+  var tRemainder = timeDifference % trainFrequency;
 
-  // Calculate the total billed rate
+  var tMinutesTillTrain = trainFrequency - tRemainder;
 
-  var empBilled = empMonths * empRate;
-  console.log(empBilled);                 */
+  var nextTrain = moment().add(tMinutesTillTrain, "minutes");
 
-  // Add all Train data into the table
-  $("#trainTable > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDestination + "</td><td>" + trainFrequency + "</td><td>" + trainTime +  "</td></tr>");
+  nextTrain = moment(nextTrain).format("HH:mm");
+
+
+
+  // Add all Train data into the trainTable-----trainame--------------------Destination----------------------Frequency--------------------NextArival----------------Minutes Away___________end/         
+  $("#trainTable > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDestination + "</td><td>" + trainFrequency + "</td><td>" + nextTrain + "</td><td>" + tMinutesTillTrain + "</td></tr>");
 
 });
+
+function onFailure(errorObject){
+console.log("Errors Handled:" + errorObject.code)
+
+};
+
+
